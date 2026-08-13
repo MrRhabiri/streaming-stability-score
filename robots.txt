@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://streaming-stability-score.pages.dev/sitemap.xml

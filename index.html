@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Streaming Stability Score (SSS) v1.0 | Open Experimental Specification</title>
+  <meta name="description" content="Streaming Stability Score (SSS) v1.0 is an open experimental specification and reference calculator for estimating streaming connection stability from 0 to 100.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://streaming-stability-score.pages.dev/">
+  <style>
+    :root{font-family:Arial,sans-serif;color:#172033;background:#f6f8fc}
+    body{margin:0}.wrap{max-width:980px;margin:auto;padding:48px 20px}
+    h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h2{margin-top:36px}.lead{font-size:1.14rem;max-width:780px;color:#46516a}
+    .card{background:#fff;border:1px solid #dfe5ef;border-radius:18px;padding:24px;margin-top:24px;box-shadow:0 8px 30px rgba(18,30,55,.06)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    label{display:block;font-weight:700;margin-bottom:6px}
+    input{box-sizing:border-box;width:100%;padding:11px;border:1px solid #cbd4e2;border-radius:9px}
+    button{margin-top:16px;border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer;background:#172033;color:white}
+    .score{font-size:2.5rem;font-weight:900;margin-top:16px}.muted{color:#667087}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #e6ebf3}
+    code{background:#eef2f8;padding:2px 5px;border-radius:5px}.links a{margin-right:16px}
+    footer{margin-top:42px;padding-top:22px;border-top:1px solid #dfe5ef;color:#667087}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"TechArticle",
+    "headline":"Streaming Stability Score (SSS) v1.0",
+    "description":"An open experimental specification for estimating streaming connection stability from 0 to 100.",
+    "version":"1.0",
+    "url":"https://streaming-stability-score.pages.dev/",
+    "publisher":{
+      "@type":"Organization",
+      "name":"IPTV Abonnement Maroc",
+      "url":"https://iptvabonnementmaroc.com/"
+    }
+  }
+  </script>
+</head>
+<body>
+<main class="wrap">
+  <p class="muted">Open experimental specification · Version 1.0</p>
+  <h1>Streaming Stability Score (SSS) v1.0</h1>
+  <p class="lead">A reproducible scoring method for estimating how suitable a network connection is for stable video streaming. The score ranges from 0 to 100 and combines bandwidth headroom, latency, jitter and packet loss.</p>
+
+  <section class="card">
+    <h2>Reference calculator</h2>
+    <div class="grid">
+      <div><label for="download">Download speed (Mbps)</label><input id="download" type="number" min="0" value="100"></div>
+      <div><label for="required">Required bitrate (Mbps)</label><input id="required" type="number" min="0.1" value="25"></div>
+      <div><label for="latency">Latency (ms)</label><input id="latency" type="number" min="0" value="35"></div>
+      <div><label for="jitter">Jitter (ms)</label><input id="jitter" type="number" min="0" value="7"></div>
+      <div><label for="loss">Packet loss (%)</label><input id="loss" type="number" min="0" step="0.1" value="0.2"></div>
+    </div>
+    <button id="calculate">Calculate SSS</button>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>How SSS v1.0 works</h2>
+    <p>The final score is a weighted combination of four component scores:</p>
+    <table>
+      <thead><tr><th>Component</th><th>Weight</th></tr></thead>
+      <tbody>
+        <tr><td>Bandwidth headroom</td><td>40%</td></tr>
+        <tr><td>Latency</td><td>20%</td></tr>
+        <tr><td>Jitter</td><td>20%</td></tr>
+        <tr><td>Packet loss</td><td>20%</td></tr>
+      </tbody>
+    </table>
+    <p><code>SSS = round(0.40 × bandwidth + 0.20 × latency + 0.20 × jitter + 0.20 × packet loss)</code></p>
+    <p class="muted">SSS is a heuristic for educational and troubleshooting use. It is not an industry standard and does not guarantee the performance of any streaming service.</p>
+  </section>
+
+  <section class="card">
+    <h2>Interpretation</h2>
+    <table>
+      <tbody>
+        <tr><td>90–100</td><td>Excellent</td></tr>
+        <tr><td>75–89</td><td>Good</td></tr>
+        <tr><td>60–74</td><td>Moderate</td></tr>
+        <tr><td>40–59</td><td>Weak</td></tr>
+        <tr><td>0–39</td><td>Poor</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card links">
+    <h2>Specification resources</h2>
+    <p>
+      <a href="/SPECIFICATION.md">Specification</a>
+      <a href="/sss-v1.schema.json">JSON Schema</a>
+      <a href="/examples.json">Examples</a>
+      <a href="/reference.js">Reference implementation</a>
+    </p>
+  </section>
+
+  <footer>
+    <p>SSS v1.0 is published as an open experimental specification by
+      <a href="https://iptvabonnementmaroc.com/">IPTV Abonnement Maroc</a>.
+    </p>
+  </footer>
+</main>
+
+<script src="/reference.js"></script>
+<script>
+document.getElementById("calculate").addEventListener("click", function () {
+  const input = {
+    download_mbps: Number(document.getElementById("download").value),
+    required_mbps: Number(document.getElementById("required").value),
+    latency_ms: Number(document.getElementById("latency").value),
+    jitter_ms: Number(document.getElementById("jitter").value),
+    packet_loss_percent: Number(document.getElementById("loss").value)
+  };
+  const el = document.getElementById("result");
+  if (!input.required_mbps || Object.values(input).some(v => !Number.isFinite(v) || v < 0)) {
+    el.innerHTML = '<p>Please enter valid non-negative values and a required bitrate greater than zero.</p>';
+    return;
+  }
+  const result = calculateSSS(input);
+  el.innerHTML = '<div class="score">' + result.score + '/100</div><strong>' + result.rating + '</strong>';
+});
+</script>
+</body>
+</html>
