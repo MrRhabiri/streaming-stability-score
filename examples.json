@@ -1,0 +1,26 @@
+[
+  {
+    "version": "1.0",
+    "input": {
+      "download_mbps": 100,
+      "required_mbps": 25,
+      "latency_ms": 35,
+      "jitter_ms": 7,
+      "packet_loss_percent": 0.2
+    },
+    "score": 94,
+    "rating": "Excellent"
+  },
+  {
+    "version": "1.0",
+    "input": {
+      "download_mbps": 30,
+      "required_mbps": 25,
+      "latency_ms": 110,
+      "jitter_ms": 24,
+      "packet_loss_percent": 1.4
+    },
+    "score": 54,
+    "rating": "Weak"
+  }
+]
